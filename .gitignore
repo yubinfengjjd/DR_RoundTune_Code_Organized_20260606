@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+checkpoints/
+weights/
+data/
+outputs/
+runs/
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.zip
+*.7z
+*.rar
