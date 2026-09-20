@@ -606,3 +606,5 @@ assert len(check.tables) == 4, len(check.tables)
 assert OUT.stat().st_size > 500000
 print(f"Created: {OUT}")
 print(f"Figures: {len(check.inline_shapes)}, Tables: {len(check.tables)}, Paragraphs: {len(check.paragraphs)}, Size: {OUT.stat().st_size}")
+
+# trigger build
