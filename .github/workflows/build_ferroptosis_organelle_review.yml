@@ -1,0 +1,31 @@
+
+name: build-ferroptosis-organelle-review
+on:
+  push:
+    branches:
+      - chatgpt-ferroptosis-organelle-review-20260921
+    paths:
+      - automation/build_ferroptosis_organelle_review.py
+      - .github/workflows/build_ferroptosis_organelle_review.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt-ferroptosis-organelle-review-20260921
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install python-docx matplotlib pillow
+      - run: python automation/build_ferroptosis_organelle_review.py
+      - name: Commit generated Word and figures
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chatgpt_exports/Ferroptosis_Organelle_Crosstalk_Review_Framework_Figures_Tables_CN.docx
+          git add chatgpt_exports/ferroptosis_organelle_figures/*.png
+          git diff --cached --quiet || git commit -m "Build ferroptosis organelle crosstalk review Word"
+          git push origin HEAD:chatgpt-ferroptosis-organelle-review-20260921
