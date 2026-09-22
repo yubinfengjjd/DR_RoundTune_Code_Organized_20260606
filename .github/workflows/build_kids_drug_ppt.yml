@@ -19,11 +19,15 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install python-pptx
-      - run: python automation/build_kids_drug_ppt.py
-      - name: Commit presentation
+      - name: Build presentation
+        run: |
+          mkdir -p chatgpt_exports
+          python automation/build_kids_drug_ppt.py > chatgpt_exports/build_kids_drug_ppt.log 2>&1 || true
+      - name: Commit outputs and log
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "chatgpt_exports/药物小侦探_一年级科普课_30分钟.pptx"
+          git add chatgpt_exports/build_kids_drug_ppt.log
+          [ -f "chatgpt_exports/药物小侦探_一年级科普课_30分钟.pptx" ] && git add "chatgpt_exports/药物小侦探_一年级科普课_30分钟.pptx" || true
           git diff --cached --quiet || git commit -m "Build kids drug science presentation"
           git push origin HEAD:chatgpt-kids-drug-science-ppt-20260922
