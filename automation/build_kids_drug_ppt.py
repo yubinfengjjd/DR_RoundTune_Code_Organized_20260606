@@ -156,8 +156,7 @@ circle(s,5.1,2.2,0.7,CORAL); add_text(s,"❤",5.18,2.2,0.55,0.45,28,WHITE,True,P
 # lungs
 circle(s,6.6,2.1,0.75,SKY,BLUE); circle(s,7.35,2.1,0.75,SKY,BLUE)
 # intestine
-rounded(s,5.55,3.65,2.4,1.35,MINT,GREEN); add_text(s,"肠道
-营养工厂",5.9,3.85,1.7,0.75,18,GREEN,True,PP_ALIGN.CENTER)
+rounded(s,5.55,3.65,2.4,1.35,MINT,GREEN); add_text(s,"肠道\\n营养工厂",5.9,3.85,1.7,0.75,18,GREEN,True,PP_ALIGN.CENTER)
 # immune police
 for dx in [0,0.65,1.3]:
     circle(s,4.7+dx,5.25,0.48,LAV,PURPLE)
@@ -176,16 +175,12 @@ rounded(s,0.8,1.5,5.6,4.7,MINT,GREEN)
 add_text(s,"健康城市",1.1,1.72,5.0,0.5,28,GREEN,True,PP_ALIGN.CENTER)
 for i in range(6):
     circle(s,1.5+i*0.65,2.8+(i%2)*0.4,0.35,BLUE if i%2==0 else GREEN)
-add_text(s,"✓ 秩序井然
-✓ 屏障完整
-✓ 免疫小警察巡逻",1.4,4.15,4.4,1.35,22,DARK,False)
+add_text(s,"✓ 秩序井然\\n✓ 屏障完整\\n✓ 免疫小警察巡逻",1.4,4.15,4.4,1.35,22,DARK,False)
 rounded(s,6.95,1.5,5.6,4.7,PINK,CORAL)
 add_text(s,"生病城市",7.25,1.72,5.0,0.5,28,CORAL,True,PP_ALIGN.CENTER)
 for i in range(8):
     circle(s,7.65+i*0.5,2.75+(i%3)*0.27,0.32,CORAL if i%2==0 else PURPLE)
-add_text(s,"⚠ 病菌可能来捣乱
-⚠ 身体会发炎
-⚠ 有些功能会“出小故障”",7.45,4.15,4.5,1.35,21,DARK)
+add_text(s,"⚠ 病菌可能来捣乱\\n⚠ 身体会发炎\\n⚠ 有些功能会“出小故障”",7.45,4.15,4.5,1.35,21,DARK)
 add_interaction(s,"找不同：右边的身体城市，哪里和左边不一样？"); add_footer(s,4,2)
 
 # Slide 5
