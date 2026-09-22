@@ -7,6 +7,7 @@ from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.enum.text import MSO_AUTO_SIZE
 from pathlib import Path
 import math
+import requests
 
 OUT = Path("chatgpt_exports/药物小侦探_一年级科普课_30分钟.pptx")
 OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -385,6 +386,122 @@ add_character(s,5.6,4.55)
 add_text(s,"谢谢大家！",4.3,6.15,4.8,0.55,30,NAVY,True,PP_ALIGN.CENTER)
 add_footer(s,18,1)
 
+
+
+# ---------------- Real-world image mini-slides ----------------
+ASSET_DIR = Path("chatgpt_exports/realistic_assets")
+ASSET_DIR.mkdir(parents=True, exist_ok=True)
+
+def download_asset(filename, url):
+    path = ASSET_DIR / filename
+    if path.exists() and path.stat().st_size > 10000:
+        return path
+    resp = requests.get(url, timeout=60, headers={"User-Agent":"Mozilla/5.0"})
+    resp.raise_for_status()
+    path.write_bytes(resp.content)
+    return path
+
+real_assets = {}
+asset_specs = {
+    "medicines": ("pills_medicines.jpg", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Pills%20and%20medicines%2001.jpg"),
+    "anatomy": ("human_anatomy.png", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Human%20Anatomy.png"),
+    "scientist": ("drug_synthesis.jpg", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Drug%20synthesis.jpg"),
+    "pipette": ("work_in_process.jpg", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Work%20in%20process.jpg"),
+    "caregiver": ("caregiver_medicine.jpg", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Child%20receiving%20medicine%20from%20caregiver%20closeup.jpg"),
+}
+for key,(fn,url) in asset_specs.items():
+    try:
+        real_assets[key] = download_asset(fn,url)
+    except Exception as e:
+        print("asset download failed", key, e)
+
+def add_photo_frame(slide, path, x,y,w,h):
+    pic = slide.shapes.add_picture(str(path), Inches(x), Inches(y), Inches(w), Inches(h))
+    # thin white border by adding transparent rectangle around it
+    frame = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x-0.03), Inches(y-0.03), Inches(w+0.06), Inches(h+0.06))
+    frame.fill.background()
+    frame.line.color.rgb = WHITE
+    frame.line.width = Pt(2)
+    # send frame behind picture if possible
+    return pic
+
+def add_credit(slide, txt):
+    add_text(slide, txt, 0.55, 7.13, 12.2, 0.22, 8, GRAY, False, PP_ALIGN.RIGHT)
+
+# Photo slide A: real medicines
+if "medicines" in real_assets:
+    s=prs.slides.add_slide(prs.slide_layouts[6]); add_bg(s,CREAM)
+    title(s,"真实世界：药物到底长什么样？","看一看真实的药片、胶囊和包装")
+    add_photo_frame(s,real_assets["medicines"],0.75,1.45,6.1,4.9)
+    rounded(s,7.2,1.55,5.25,4.65,WHITE,BLUE)
+    add_text(s,"你能找到这些吗？",7.55,1.85,4.6,0.5,26,NAVY,True,PP_ALIGN.CENTER)
+    for j,(name,cx) in enumerate([("药片",BLUE),("胶囊",CORAL),("泡罩包装",GREEN),("药瓶",PURPLE)]):
+        circle(s,7.65,2.75+j*0.75,0.42,cx)
+        add_text(s,str(j+1),7.78,2.84+j*0.75,0.16,0.16,13,WHITE,True,PP_ALIGN.CENTER)
+        add_text(s,name,8.35,2.69+j*0.75,2.7,0.42,21,DARK,True)
+    rounded(s,7.55,5.25,4.55,0.68,PINK,CORAL)
+    add_text(s,"⚠ 再漂亮，也不是糖果！",7.8,5.38,4.05,0.35,20,CORAL,True,PP_ALIGN.CENTER)
+    add_interaction(s,"照片里你最先看到了哪一种药物形式？")
+    add_credit(s,"图片：Wikimedia Commons · Pills and medicines 01.jpg · CC BY-SA")
+
+# Photo slide B: anatomy
+if "anatomy" in real_assets:
+    s=prs.slides.add_slide(prs.slide_layouts[6]); add_bg(s,WHITE)
+    title(s,"真实世界：身体里的器官在哪里？","把“身体城市”变成一张真正的解剖图")
+    add_photo_frame(s,real_assets["anatomy"],0.85,1.35,5.5,5.35)
+    rounded(s,6.7,1.45,5.75,4.95,SKY,BLUE)
+    organs=[("肺","帮助我们呼吸",BLUE),("心脏","把血液送到全身",CORAL),("胃","开始处理食物",YELLOW),("肠道","吸收营养",GREEN)]
+    for j,(name,desc,col) in enumerate(organs):
+        circle(s,7.05,1.95+j*0.95,0.52,col)
+        add_text(s,str(j+1),7.21,2.07+j*0.95,0.2,0.18,14,WHITE,True,PP_ALIGN.CENTER)
+        add_text(s,name,7.8,1.85+j*0.95,1.0,0.4,21,col,True)
+        add_text(s,desc,8.9,1.85+j*0.95,3.1,0.4,18,DARK)
+    add_interaction(s,"我说器官名字，大家在图片上找一找！")
+    add_credit(s,"图片：Wikimedia Commons · Human Anatomy.png · CC0")
+
+# Photo slide C: scientists at work
+if "scientist" in real_assets and "pipette" in real_assets:
+    s=prs.slides.add_slide(prs.slide_layouts[6]); add_bg(s,SKY)
+    title(s,"真实世界：药物科学家真的在做什么？","不是“魔法实验”，而是一遍遍认真测试")
+    add_photo_frame(s,real_assets["scientist"],0.55,1.35,5.85,4.45)
+    add_photo_frame(s,real_assets["pipette"],6.9,1.35,5.85,4.45)
+    rounded(s,1.2,5.95,11.0,0.68,WHITE,BLUE)
+    add_text(s,"观察 · 测量 · 移液 · 记录 · 比较 · 再改进",1.5,6.08,10.4,0.4,23,NAVY,True,PP_ALIGN.CENTER)
+    add_interaction(s,"你能在照片里找到：白大褂、护目镜、移液器、实验仪器吗？")
+    add_credit(s,"图片：Wikimedia Commons · Drug synthesis.jpg / Work in process.jpg · CC/PD")
+
+# Photo slide D: caregiver safety
+if "caregiver" in real_assets:
+    s=prs.slides.add_slide(prs.slide_layouts[6]); add_bg(s,CREAM)
+    title(s,"真实世界：吃药为什么需要大人帮助？")
+    add_photo_frame(s,real_assets["caregiver"],0.75,1.45,6.25,4.9)
+    rounded(s,7.35,1.55,5.0,4.65,WHITE,GREEN)
+    add_text(s,"安全用药 3 步",7.7,1.85,4.3,0.48,27,GREEN,True,PP_ALIGN.CENTER)
+    rules=[("①","身体不舒服先告诉大人",GREEN),("②","只用大人/医生确认的药",BLUE),("③","按正确的量和方法使用",PURPLE)]
+    for j,(n,txt,col) in enumerate(rules):
+        circle(s,7.75,2.75+j*0.95,0.58,col)
+        add_text(s,n,7.91,2.9+j*0.95,0.25,0.2,16,WHITE,True,PP_ALIGN.CENTER)
+        add_text(s,txt,8.55,2.7+j*0.95,3.2,0.5,20,DARK,True)
+    rounded(s,7.75,5.55,4.15,0.5,PINK,CORAL)
+    add_text(s,"药不是自己决定吃的东西",7.95,5.62,3.75,0.33,18,CORAL,True,PP_ALIGN.CENTER)
+    add_interaction(s,"如果你在家里看到不认识的药，第一件事应该做什么？")
+    add_credit(s,"图片：Wikimedia Commons · Child receiving medicine from caregiver closeup.jpg · CC BY 2.0")
+
+# Move the four real-world slides into the story flow.
+# They are appended at the end; reposition them after base slides 2, 3, 11 and 13.
+def move_last_to(index):
+    lst = prs.slides._sldIdLst
+    el = lst[-1]
+    lst.remove(el)
+    lst.insert(index, el)
+
+# Because moving the last slide changes which remains last, move in reverse desired order.
+# Current appended order A,B,C,D; D is last.
+move_last_to(13)  # D after original safety slide 13
+move_last_to(11)  # C after scientist-work slide 11
+move_last_to(3)   # B after body-city slide 3
+move_last_to(2)   # A after dosage-forms slide 2
+
 # Metadata
 prs.core_properties.title="药物小侦探：一颗药是怎样帮助身体的？"
 prs.core_properties.subject="一年级家长进课堂科普课，30分钟"
@@ -393,7 +510,7 @@ prs.core_properties.author="ChatGPT"
 prs.save(OUT)
 # QA reopen
 check=Presentation(OUT)
-assert len(check.slides)==18
+assert len(check.slides)>=22
 assert OUT.stat().st_size>50000
 print(OUT)
 print("slides",len(check.slides),"bytes",OUT.stat().st_size)
