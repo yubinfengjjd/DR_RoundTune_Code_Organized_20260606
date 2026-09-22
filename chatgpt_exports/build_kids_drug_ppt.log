@@ -1,4 +1,8 @@
+asset download failed scientist 429 Client Error: Too many requests (f061ab2) for url: https://upload.wikimedia.org/wikipedia/commons/0/04/Drug_synthesis.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+asset download failed pipette 429 Client Error: Too many requests (f061ab2) for url: https://upload.wikimedia.org/wikipedia/commons/9/90/Work_in_process.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+asset download failed caregiver 429 Client Error: Too many requests (f061ab2) for url: https://upload.wikimedia.org/wikipedia/commons/7/7a/Child_receiving_medicine_from_caregiver_closeup.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
 Traceback (most recent call last):
-  File "/home/runner/work/DR_RoundTune_Code_Organized_20260606/DR_RoundTune_Code_Organized_20260606/automation/build_kids_drug_ppt.py", line 10, in <module>
-    import requests
-ModuleNotFoundError: No module named 'requests'
+  File "/home/runner/work/DR_RoundTune_Code_Organized_20260606/DR_RoundTune_Code_Organized_20260606/automation/build_kids_drug_ppt.py", line 513, in <module>
+    assert len(check.slides)>=22
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError
