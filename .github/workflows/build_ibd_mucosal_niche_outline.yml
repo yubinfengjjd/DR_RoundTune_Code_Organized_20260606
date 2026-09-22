@@ -1,0 +1,39 @@
+name: build-ibd-mucosal-niche-outline
+on:
+  push:
+    branches:
+      - chatgpt-ibd-mucosal-niche-outline-20260922
+    paths:
+      - automation/build_ibd_mucosal_niche_outline.py
+      - .github/workflows/build_ibd_mucosal_niche_outline.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt-ibd-mucosal-niche-outline-20260922
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install python-docx
+      - run: python automation/build_ibd_mucosal_niche_outline.py
+      - name: Validate DOCX zip integrity
+        run: python - <<'PY'
+          import zipfile
+          p='chatgpt_exports/IBD_Mucosal_Spatial_Niche_Review_Outline_CN.docx'
+          with zipfile.ZipFile(p) as z:
+              bad=z.testzip()
+              assert bad is None, bad
+              assert 'word/document.xml' in z.namelist()
+          print('DOCX integrity OK')
+          PY
+      - name: Commit generated Word
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chatgpt_exports/IBD_Mucosal_Spatial_Niche_Review_Outline_CN.docx
+          git diff --cached --quiet || git commit -m "Build IBD mucosal spatial niche review outline Word"
+          git push origin HEAD:chatgpt-ibd-mucosal-niche-outline-20260922
