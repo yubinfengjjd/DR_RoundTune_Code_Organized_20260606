@@ -1,21 +1,2 @@
-Traceback (most recent call last):
-  File "/home/runner/work/DR_RoundTune_Code_Organized_20260606/DR_RoundTune_Code_Organized_20260606/automation/build_ophthalmic_radiomics_review.py", line 162, in <module>
-    box(ax,8.25,4.8,2.3,1.35,"Interpretable\nendotypes","subtype A · B · C\nbiologically grounded",COLORS["cream"],COLORS["orange"],10,True)
-  File "/home/runner/work/DR_RoundTune_Code_Organized_20260606/DR_RoundTune_Code_Organized_20260606/automation/build_ophthalmic_radiomics_review.py", line 34, in box
-    p=FancyBboxPatch((x,y),w,h,boxstyle=f"round,pad=0.03,rounding_size={radius}",facecolor=fc,edgecolor=ec,linewidth=1.2)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/patches.py", line 4096, in __init__
-    super().__init__(**kwargs)
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/patches.py", line 87, in __init__
-    self.set_facecolor(facecolor)
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/patches.py", line 411, in set_facecolor
-    self._set_facecolor(color)
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/patches.py", line 399, in _set_facecolor
-    self._facecolor = colors.to_rgba(color, alpha)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/colors.py", line 353, in to_rgba
-    rgba = _to_rgba_no_colorcycle(c, alpha)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/matplotlib/colors.py", line 421, in _to_rgba_no_colorcycle
-    raise ValueError(f"Invalid RGBA argument: {orig_c!r}")
-ValueError: Invalid RGBA argument: 'subtype A · B · C\nbiologically grounded'
+chatgpt_exports/影像组学与眼科疾病_高影响力综述框架_图表整合版.docx
+paragraphs 114 tables 4 figures 7 bytes 1114013
