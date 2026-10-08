@@ -1,0 +1,31 @@
+name: build-ophthalmic-radiomics-review
+on:
+  push:
+    branches:
+      - chatgpt-ophthalmic-radiomics-review-20261008
+    paths:
+      - automation/build_ophthalmic_radiomics_review.py
+      - .github/workflows/build_ophthalmic_radiomics_review.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt-ophthalmic-radiomics-review-20261008
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install python-docx matplotlib numpy pillow
+      - name: Build review Word
+        run: python automation/build_ophthalmic_radiomics_review.py
+      - name: Commit output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chatgpt_exports/ophthalmic_radiomics_assets
+          git add "chatgpt_exports/影像组学与眼科疾病_高影响力综述框架_图表整合版.docx"
+          git diff --cached --quiet || git commit -m "Build ophthalmic radiomics review Word"
+          git push origin HEAD:chatgpt-ophthalmic-radiomics-review-20261008
